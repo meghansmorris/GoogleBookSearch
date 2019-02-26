@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import NavBar from './components/NavBar/NavBar';
+import { BrowserRouter as Router,
+  Route,
+  Switch
+  } from "react-router-dom";
+
+import Home from "./pages/Homepage";
+import Saved from "./pages/Savedpage";
+import Searchpage from "./pages/Searchpage";
+import NavBar from "./components/NavBar/NavBar";
+import NoMatch from "./pages/NoMatch";
 import API from "./utils/API";
 
 
@@ -20,14 +29,19 @@ class App extends Component {
 
   render() {
     return (
+    <Router>
       <>
         <NavBar />
-        <div className="App">
-          <h1>hello world!</h1>
-        </div>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/search" component={Searchpage} />
+          <Route exact path="/saved/" component={Saved} />
+          <Route component={NoMatch} />
+        </Switch>
       </>
-    );
-  }
+    </Router>
+    )
+  };
 }
 
 export default App;
