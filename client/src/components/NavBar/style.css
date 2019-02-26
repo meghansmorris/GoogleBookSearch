@@ -1,0 +1,7 @@
+.jumbotron {
+    background-image: url("./images/mighty-waves.jpg");
+    background-repeat: no-repeat;
+    background-size: inherit;
+    background-position-x: top;
+    max-height: 300px;
+}
