@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import { Col, Container, Row } from "../components/Grid/Grid";
-import { List, ListItem } from "../components/List/List";
-import { Input, TextArea, FormBtn } from "../components/Search/Search";
+import { List, BookListItem } from "../components/List/List";
 
 class SavedBooks extends Component {
   state = {
     books: [],
     title: "",
     author: "",
+    description: "",
+    image: "",
+    link: "",
+    date: ""
   };
 
   componentDidMount() {
@@ -18,8 +21,8 @@ class SavedBooks extends Component {
 
   loadBooks = () => {
     API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+      .then(res => console.log(res)
+        // this.setState({ books: res.data, title: "", author: "" })
       )
       .catch(err => console.log(err));
   };
@@ -39,11 +42,9 @@ class SavedBooks extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
+    if (this.state.title) {
       API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
+        title: this.state.title
       })
         .then(res => this.loadBooks())
         .catch(err => console.log(err));
@@ -59,13 +60,9 @@ class SavedBooks extends Component {
               {this.state.books.length ? (
                 <List>
                   {this.state.books.map(book => (
-                    <ListItem key={book._id}>
-                      <Link to={"/books/" + book._id}>
-                        <strong>
-                          {book.title}
-                        </strong>
-                      </Link>
-                    </ListItem>
+                    <BookListItem key={book._id}>
+    
+                    </BookListItem>
                   ))}
                 </List>
               ) : (

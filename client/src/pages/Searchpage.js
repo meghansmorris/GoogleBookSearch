@@ -1,36 +1,29 @@
 import React, { Component } from "react";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import { Col, Container, Row } from "../components/Grid/Grid";
-import { List, ListItem } from "../components/List/List";
-import { Input, TextArea, FormBtn } from "../components/Search/Search";
+import { List, BookListItem } from "../components/List/List";
+import { Input, FormBtn } from "../components/Search/Search";
 
 class Books extends Component {
   state = {
     books: [],
+    bookSearch: "",
     title: "",
     author: "",
+    description: "",
+    image: "",
+    link: "",
+    date: ""
   };
 
   componentDidMount() {
     this.loadBooks();
   }
 
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-      )
-      .catch(err => console.log(err));
-  };
-
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
-      .catch(err => console.log(err));
-  };
-
   handleInputChange = event => {
+    // Destructure the name and value properties off of event.target
+    // Update the appropriate state
     const { name, value } = event.target;
     this.setState({
       [name]: value
@@ -38,17 +31,47 @@ class Books extends Component {
   };
 
   handleFormSubmit = event => {
+    // When the form is submitted, prevent its default behavior, get recipes update the recipes state
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
+    API.getBooks(this.state.bookSearch)
+      .then(res => {
+        console.log(res.data);
+        this.setState({ books: res.data });
       })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
+      .catch(err => console.log(err));
   };
+
+  loadBooks = () => {
+    API.getBooks()
+      .then(res =>
+        this.setState({ books: res.data, title: "", author: "", description: "", image: "", link: "", date: "" })
+      )
+      .catch(err => console.log(err));
+  };
+
+  // deleteBook = id => {
+  //   API.deleteBook(id)
+  //     .then(res => this.loadBooks())
+  //     .catch(err => console.log(err));
+  // };
+
+  // handleInputChange = event => {
+  //   const { name, value } = event.target;
+  //   this.setState({
+  //     [name]: value
+  //   });
+  // };
+
+  // handleFormSubmit = event => {
+  //   event.preventDefault();
+  //   if (this.state.title) {
+  //     API.saveBook({
+  //       title: this.state.title
+  //     })
+  //       .then(res => this.loadBooks())
+  //       .catch(err => console.log(err));
+  //   }
+  // };
 
   render() {
     return (
@@ -58,13 +81,13 @@ class Books extends Component {
           <Col size="md-6">
             <form>
               <Input
-                value={this.state.title}
+                value={this.state.bookSearch}
                 onChange={this.handleInputChange}
-                name="title"
+                name="bookSearch"
                 placeholder="Enter a title or keyword"
               />
               <FormBtn
-                disabled={!(this.state.author && this.state.title)}
+                disabled={!(this.state.title)}
                 onClick={this.handleFormSubmit}
               >
                 Find Books
@@ -77,13 +100,14 @@ class Books extends Component {
               {this.state.books.length ? (
                 <List>
                   {this.state.books.map(book => (
-                    <ListItem key={book._id}>
-                      <Link to={"/books/" + book._id}>
-                        <strong>
-                          {book.title}
-                        </strong>
-                      </Link>
-                    </ListItem>
+                    <BookListItem 
+                      key={book._id}
+                      title={book.title}
+                      thumbnail={book.image}
+                      author={book.author}
+                      description={book.description}
+                    >
+                    </BookListItem>
                   ))}
                 </List>
               ) : (

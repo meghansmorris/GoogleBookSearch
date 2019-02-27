@@ -9,23 +9,22 @@ import Saved from "./pages/Savedpage";
 import Searchpage from "./pages/Searchpage";
 import NavBar from "./components/NavBar/NavBar";
 import NoMatch from "./pages/NoMatch";
-//import API from "./utils/API";
 
-  function App() {
-    return (
-    <Router>
-      <>
-        <NavBar />
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route exact path="/search" component={Searchpage} />
-          <Route exact path="/saved/" component={Saved} />
-          <Route component={NoMatch} />
-        </Switch>
-      </>
-    </Router>
-    )
-  };
+function App() {
+  return (
+  <Router>
+    <>
+      <NavBar />
+      <Switch>
+        <Route exact path="/" component={Homepage} />
+        <Route exact path="/search" component={Searchpage} />
+        <Route exact path="/saved/" component={Saved} />
+        <Route component={NoMatch} />
+      </Switch>
+    </>
+  </Router>
+  )
+};
 
 
 export default App;
