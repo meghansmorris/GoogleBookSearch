@@ -1,36 +1,101 @@
 import React, { Component } from "react";
-import { Col, Row, Container } from "../components/Grid/Grid";
-import Search from "../components/Search/Search";
 import API from "../utils/API";
+import { Link } from "react-router-dom";
+import { Col, Container, Row } from "../components/Grid/Grid";
+import { List, ListItem } from "../components/List/List";
+import { Input, TextArea, FormBtn } from "../components/Search/Search";
 
-class Searchpage extends Component {
+class Books extends Component {
   state = {
-    book: {}
+    books: [],
+    title: "",
+    author: "",
   };
-  // Add code to get the book with an _id equal to the id in the route param
-  // e.g. http://localhost:3000/books/:id
-  // The book id for this route can be accessed using this.props.match.params.id
 
+  componentDidMount() {
+    this.loadBooks();
+  }
 
-//   componentDidMount() {
-//     //will give us the ID of the book we want from the URL
-//     API.getBook(this.props.match.params.id)
-//       .then(res => this.setState({ book: res.data }))
-//       .catch(err => console.log(err));
-//   }
+  loadBooks = () => {
+    API.getBooks()
+      .then(res =>
+        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+      )
+      .catch(err => console.log(err));
+  };
+
+  deleteBook = id => {
+    API.deleteBook(id)
+      .then(res => this.loadBooks())
+      .catch(err => console.log(err));
+  };
+
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+    if (this.state.title && this.state.author) {
+      API.saveBook({
+        title: this.state.title,
+        author: this.state.author,
+        synopsis: this.state.synopsis
+      })
+        .then(res => this.loadBooks())
+        .catch(err => console.log(err));
+    }
+  };
 
   render() {
     return (
-      <Container fluid>
-        <Row>
-          <Col size="md-12">
-            <Search />
+        <>
+        <Container>
+          <Row>
+          <Col size="md-6">
+            <form>
+              <Input
+                value={this.state.title}
+                onChange={this.handleInputChange}
+                name="title"
+                placeholder="Enter a title or keyword"
+              />
+              <FormBtn
+                disabled={!(this.state.author && this.state.title)}
+                onClick={this.handleFormSubmit}
+              >
+                Find Books
+              </FormBtn>
+            </form>
           </Col>
-        </Row>
-  
-      </Container>
+          </Row>
+          <Row>
+            <Col size="md-6 sm-12">
+              {this.state.books.length ? (
+                <List>
+                  {this.state.books.map(book => (
+                    <ListItem key={book._id}>
+                      <Link to={"/books/" + book._id}>
+                        <strong>
+                          {book.title}
+                        </strong>
+                      </Link>
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <h3>No Results to Display</h3>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      </>
+ 
     );
   }
 }
 
-export default Searchpage;
+export default Books;

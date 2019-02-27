@@ -5,3 +5,11 @@
     background-position-x: top;
     max-height: 300px;
 }
+
+.nav-item {
+    color: #fbe5b0;
+}
+
+.nav-item:hover {
+    color: #f4c8aa;
+}
