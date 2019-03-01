@@ -1,11 +1,24 @@
 import axios from "axios";
-//const router = require("express").Router();
+import apiKey from "../utils/googleAPI/key";
 
+// export default {
+//   getBooks: function() {
+//     return axios.get("/api/books");
+//     // return axios.get("/api/books", { params: { q: query } });
+//   },
 
-// The get method retrieves books from the server
-// It accepts a "query" or term to search the api
 export default {
-  getBooks: function(query) {
-    return axios.get("/api/books", { params: { q: query } });
+  getNewBooks: function(query) {
+    const baseURL = `https://www.googleapis.com/books/v1/volumes?q=intitle:${query}&key="${apiKey}`;
+    return axios.get(baseURL);
+  },
+  getBooks: function() {
+    return axios.get("/api/books/");
+  },
+  deleteBook: function(id) {
+    return axios.delete("/api/books/" + id);
+  },
+  saveBook: function(bookData) {
+    return axios.post("/api/books/", bookData);
   }
 };

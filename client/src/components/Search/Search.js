@@ -4,22 +4,20 @@ import "./style.css";
 export function Input(props) {
     return (
       <div className="form-group">
-        <input className="form-control" {...props} />
+        <input 
+          className="form-control"
+          value={props.search}
+          onChange={props.handleInputChange}
+          name="search"
+          placeholder="Enter a title or keyword"
+         />
       </div>
     );
-  }
-  
-  export function TextArea(props) {
-    return (
-      <div className="form-group">
-        <textarea className="form-control" rows="1" {...props} />
-      </div>
-    );
-  }
+}
   
   export function FormBtn(props) {
     return (
-      <button {...props} style={{ float: "right", marginBottom: 10 }} className="btn btn-secondary">
+      <button onClick={props.handleFormSubmit} type="submit" style={{ float: "right", marginBottom: 10 }} className="btn btn-secondary">
         {props.children}
       </button>
     );

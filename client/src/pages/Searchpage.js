@@ -1,77 +1,49 @@
 import React, { Component } from "react";
 import API from "../utils/API";
-//import { Link } from "react-router-dom";
 import { Col, Container, Row } from "../components/Grid/Grid";
 import { List, BookListItem } from "../components/List/List";
 import { Input, FormBtn } from "../components/Search/Search";
 
 class Books extends Component {
   state = {
-    books: [],
-    bookSearch: "",
+    search: "",
+    books: [], //results
     title: "",
     author: "",
     description: "",
+    save: false,
     image: "",
     link: "",
     date: ""
   };
 
-  componentDidMount() {
-    this.loadBooks();
-  }
+  // componentDidMount() {
+  //   //this.loadBooks();
+  // }
 
   handleInputChange = event => {
-    // Destructure the name and value properties off of event.target
-    // Update the appropriate state
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
+      // Destructure the name and value properties off of event.target
+      // Update the appropriate state
+      const { name, value } = event.target;
+      this.setState({
+        [name]: value
+      });
+      console.log(value);
   };
 
   handleFormSubmit = event => {
-    // When the form is submitted, prevent its default behavior, get recipes update the recipes state
     event.preventDefault();
-    API.getBooks(this.state.bookSearch)
+    API.getNewBooks(this.state.search)
       .then(res => {
-        console.log(res.data);
-        this.setState({ books: res.data });
+        if (res.data.status === "error") {
+          throw new Error(res.data.message);
+        }
+        console.log(res.data)
+        this.setState({ books: res.data, error: "" });
       })
-      .catch(err => console.log(err));
+      .catch(err => this.setState({ error: err.message }));
   };
 
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", description: "", image: "", link: "", date: "" })
-      )
-      .catch(err => console.log(err));
-  };
-
-  // deleteBook = id => {
-  //   API.deleteBook(id)
-  //     .then(res => this.loadBooks())
-  //     .catch(err => console.log(err));
-  // };
-
-  // handleInputChange = event => {
-  //   const { name, value } = event.target;
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // };
-
-  // handleFormSubmit = event => {
-  //   event.preventDefault();
-  //   if (this.state.title) {
-  //     API.saveBook({
-  //       title: this.state.title
-  //     })
-  //       .then(res => this.loadBooks())
-  //       .catch(err => console.log(err));
-  //   }
-  // };
 
   render() {
     return (
@@ -81,13 +53,13 @@ class Books extends Component {
           <Col size="md-6">
             <form>
               <Input
-                value={this.state.bookSearch}
+                value={this.state.search}
                 onChange={this.handleInputChange}
                 name="bookSearch"
                 placeholder="Enter a title or keyword"
               />
               <FormBtn
-                disabled={!(this.state.title)}
+                // disabled={!(this.state.title)}
                 onClick={this.handleFormSubmit}
               >
                 Find Books

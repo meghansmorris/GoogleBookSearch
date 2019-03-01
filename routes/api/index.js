@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const bookRoutes = require("./books");
-const googleAPI = require("./googleapi");
+const API = require("./../../client/src/utils/API");
 
 // Book routes
 router.use("/books", bookRoutes);
-router.use("/googleapi", googleAPI );
+router.use("/api/books", API);
 
 module.exports = router;
